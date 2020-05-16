@@ -1,6 +1,6 @@
 # Maintainer: Sighery
 pkgname=terraform-provider-njalla
-pkgver=0.1.0
+pkgver=0.2.0
 pkgrel=1
 pkgdesc="Unofficial Terraform Njalla provider plugin"
 url='https://github.com/Sighery/terraform-provider-njalla'
@@ -10,7 +10,7 @@ makedepends=('go')
 source=(
 	"$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
 )
-sha256sums=('ae236abc5dadcc3e763d8f04b8759805429db517765f8571cea87b778efb1c09')
+sha256sums=('da601acdbec95dcc0445dae9013247f98536aa83e4aead86c46a8b01ec8efe59')
 
 build() {
 	export CGO_LDFLAGS="${LDFLAGS}"
