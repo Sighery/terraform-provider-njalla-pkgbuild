@@ -1,0 +1,39 @@
+name: Tag
+
+on:
+  push:
+    branches:
+      - "master"
+    paths:
+      - "PKGBUILD"
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }}
+
+      - name: Build Arch Linux package
+        run: make archbuild
+
+      - name: Fetch Arch Linux package version
+        id: pkg_version
+        run: |
+          PKG_VERSION=$(tar -xOf output/terraform-provider-njalla-*.pkg.tar.xz .PKGINFO | sed -n "s/pkgver = //p")
+          echo "::set-output name=VERSION::v$PKG_VERSION"
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'actions@github.com'
+
+      - name: Tag version
+        run: >
+          git tag -m ${{ steps.pkg_version.outputs.VERSION }}
+          -a ${{ steps.pkg_version.outputs.VERSION }}
+
+      - name: Push tag
+        run: git push origin ${{ steps.pkg_version.outputs.VERSION }}
