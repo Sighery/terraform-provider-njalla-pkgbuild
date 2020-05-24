@@ -1,0 +1,49 @@
+name: Update PKGBUILD
+
+on:
+  repository_dispatch:
+    types: [release-notification]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }}
+
+      # Tags will come with the v1.2.3 format
+      - name: Parse tag name
+        run: |
+          tag_name="${{ github.event.client_payload.tag_name }}"
+          echo "::set-env name=VERSION::${tag_name:1}"
+
+      - name: Permissions hack
+        run: |
+          chmod 777 "$GITHUB_WORKSPACE"
+          chmod 777 PKGBUILD
+          chmod 777 "$HOME"
+
+      - name: Update PKGBUILD
+        uses: Sighery/run-on-arch-action@master
+        with:
+          image: sighery/archbuilder:latest
+          run: |
+            sed -i 's/pkgver=.\+/pkgver=${{ env.VERSION }}/' PKGBUILD
+            sed -i 's/pkgrel=.\+/pkgrel=1/' PKGBUILD
+            chown 777 PKGBUILD
+            sudo -u builder bash -c 'updpkgsums PKGBUILD'
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'actions@github.com'
+
+      - name: Commit updated PKGBUILD
+        run: |
+          git add PKGBUILD
+          git commit -m "Bump to v${{ env.VERSION }}"
+
+      - name: Push changes
+        run: git push
