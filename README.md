@@ -1,3 +1,15 @@
+# DEPRECATED
+
+Terraform has a [Registry][Terraform Registry] now where all providers
+(official or third-party) can be installed from with the new Terraform v0.13
+syntax.
+
+As such, there's no need to make an Arch Linux package anymore. More
+information on using this provider with Terraform v0.13 _on any OS_ in the
+[provider repository][Terraform Njalla provider installation] itself.
+
+---
+
 # Arch Linux PKGBUILD for the unofficial Terraform Njalla provider
 
 This is the PKGBUILD for the
@@ -48,3 +60,6 @@ make archbuild
 [Building in a clean chroot]: https://wiki.archlinux.org/index.php/DeveloperWiki:Building_in_a_clean_chroot
 [makepkg usage]: https://wiki.archlinux.org/index.php/Makepkg#Usage
 [arch-builder-docker]: https://github.com/Sighery/arch-builder-docker
+
+[Terraform Registry]: https://registry.terraform.io/
+[Terraform Njalla provider installation]: https://github.com/Sighery/terraform-provider-njalla#installing
